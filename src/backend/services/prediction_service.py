@@ -1,19 +1,33 @@
-import joblib
+# src/backend/services/prediction_service.py
+
 import os
+import pandas as pd
+import datetime
+from ...predict_inventory import predict_inventory  # <-- Import from your existing script
 
-MODEL_PATH = os.path.join("models", "demand_forecast.pkl")
-
-def load_model():
+def forecast_stock(date_str):
+    """
+    1. Prepare a sample input row
+    2. Update the 'date' and possibly 'delivery_time'
+    3. Call your existing predict_inventory() function
+    """
+    # Validate date format
     try:
-        model = joblib.load(MODEL_PATH)
-        return model
-    except FileNotFoundError:
-        raise Exception("Model not found. Please ensure demand_forecast.pkl exists in the models directory.")
+        date_obj = datetime.datetime.strptime(date_str, "%Y-%m-%d")
+    except ValueError:
+        raise ValueError(f"Invalid date format. Use YYYY-MM-DD. Got: {date_str}")
 
-def predict_inventory(day):
-    if day <= 0:
-        raise ValueError("Day must be a positive integer.")
-    
-    model = load_model()
-    prediction = model.predict([[day]])  # Assuming model expects [[day]]
-    return round(prediction[0], 2)
+    # Load a sample row from CSV (or build from scratch) 
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    data_path = os.path.join(base_dir, '../../../data/cleaned_data.csv')
+    df = pd.read_csv(data_path)
+    sample_row = df.iloc[[0]].copy()
+
+    # Update the date and delivery_time
+    sample_row['date'] = date_str
+    sample_row['delivery_time'] = (date_obj + datetime.timedelta(days=10)).strftime("%Y-%m-%d")
+
+    # Call your existing function from predict_inventory.py
+    # This function should load the model, reindex features, etc.
+    prediction = predict_inventory(sample_row)
+    return float(prediction[0])  # Convert numpy.float64 to float

@@ -1,23 +1,21 @@
+# src/backend/main.py
+
+import os
 from flask import Flask
+from .routes.inventory_routes import inventory_bp
 from src.backend.routes.prediction_routes import prediction_bp
 
-app = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
 
-# Register the blueprint with a URL prefix
-app.register_blueprint(prediction_bp, url_prefix="/predict")
 
-# Optional: Root route for quick check
-@app.route("/")
-def home():
-    return "Flask app is running. Visit /predict/predict"
+    # Register Blueprints
+    app.register_blueprint(inventory_bp, url_prefix='/inventory')
+    app.register_blueprint(prediction_bp, url_prefix='/predict')
 
-# Function to print registered routes
-def print_registered_routes():
-    print("Registered routes:")
-    for rule in app.url_map.iter_rules():
-        print(rule)
+    return app
 
-# Run the app
-if __name__ == "__main__":
-    print_registered_routes()  # Print routes on startup
-    app.run(debug=True)
+if __name__ == '__main__':
+    app = create_app()
+    # Debug mode is fine for MVP, but be cautious for production
+    app.run(debug=True, host='127.0.0.1', port=5000)

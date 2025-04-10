@@ -1,17 +1,12 @@
-from flask import request, jsonify
-from src.backend.services.prediction_service import predict_inventory
+# src/backend/controllers/prediction_controller.py
 
-def get_prediction():
-    try:
-        day = request.args.get("day", type=int)
-        if day is None:
-            return jsonify({"error": "Missing 'day' query parameter."}), 400
+from ..services.prediction_service import forecast_stock
 
-        prediction = predict_inventory(day)
-        return jsonify({"Прогнозируемый запас": prediction}), 200
-
-    except ValueError as ve:
-        return jsonify({"error": str(ve)}), 400
-
-    except Exception as e:
-        return jsonify({"error": f"Internal server error: {str(e)}"}), 500
+def get_prediction(date_str):
+    """
+    Controller-level logic for handling the query parameters and calling the service.
+    """
+    # Validate date format or do any other pre-processing
+    # ...
+    # Pass it to the service
+    return forecast_stock(date_str)

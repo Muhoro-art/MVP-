@@ -1,10 +1,10 @@
-import pandas as pd
-from src.backend.config import DATA_PATH
+# src/backend/controllers/inventory_controller.py
 
-def get_current_inventory():
-    try:
-        df = pd.read_csv(DATA_PATH)
-        inventory = df[['item_name', 'stock_level']].to_dict(orient='records')
-        return inventory
-    except Exception as e:
-        raise Exception(f"Error reading inventory data: {e}")
+from ..services.inventory_service import fetch_inventory # type: ignore
+
+def get_inventory_data():
+    """
+    Controller function to process request and return inventory JSON.
+    """
+    # (Optionally do any extra logic here, e.g., filtering or validation)
+    return fetch_inventory()
