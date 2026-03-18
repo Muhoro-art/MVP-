@@ -37,6 +37,15 @@ The Inventory Forecasting MVP is intended to:
 - **Notify managers** when inventory reaches a critical threshold (to be implemented by the Notifications Developer).
 - **Provide a shared baseline** for backend, frontend, and notification integration during MVP development.
 
+### Practical Problem This Now Solves
+
+The backend now targets a real operations problem: **preventing stockouts while avoiding unnecessary over-ordering**.
+
+It provides:
+- **Latest inventory snapshot per item** (`GET /inventory/summary`)
+- **Reorder planning recommendations** with lead-time and demand logic (`GET /inventory/reorder-plan`)
+- **Item-aware forecasting** (`GET /predict?date=YYYY-MM-DD&item=<name>`)
+
 ---
 
 ## Completed Work (Data & Model Engineering)

@@ -11,16 +11,20 @@ def predict_inventory():
     GET /predict?date=YYYY-MM-DD
     Returns a forecast of the inventory level for the specified date.
     """
-    input_date = request.args.get('date')
+    input_date = request.args.get('date') or request.args.get('day')
+    item = request.args.get('item')
     if not input_date:
-        return jsonify({"error": "Missing 'date' query parameter."}), 400
+        return jsonify({"error": "Missing 'date' or 'day' query parameter."}), 400
 
     try:
-        prediction = get_prediction(input_date)
-        return jsonify({
+        prediction = get_prediction(input_date, item=item)
+        response = {
             "date": input_date,
             "predicted_stock": prediction
-        }), 200
+        }
+        if item:
+            response['item'] = item
+        return jsonify(response), 200
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
     except Exception as e:
