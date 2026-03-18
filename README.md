@@ -35,6 +35,7 @@ The Inventory Forecasting MVP is intended to:
 - **Train a machine learning model** (currently Linear Regression) to forecast future inventory levels.
 - **Expose the prediction functionality via a Flask API** so that non-technical users can interact with the system through a web dashboard.
 - **Notify managers** when inventory reaches a critical threshold (to be implemented by the Notifications Developer).
+- **Provide a shared baseline** for backend, frontend, and notification integration during MVP development.
 
 ---
 
